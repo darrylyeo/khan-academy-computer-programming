@@ -1,3 +1,5 @@
+// http://la94022.com/~blyon/Javascript/Imagenator/
+
 //console.log(KAInfiniteLoopProtect)
 //this["KAInfiniteLoopProtect"].KAInfiniteLoopSetTimeout(40000);
 new Processing(
