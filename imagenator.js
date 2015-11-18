@@ -8,6 +8,7 @@ new Processing(
         canvas.style.width = document.body.clientWidth;
         canvas.style.height = document.body.height;
         canvas.id = "processing-js-canvas";
+        document.body.appendChild(canvas);
         return canvas;
     })(),
     function(processingInstance) {with(processingInstance) {
