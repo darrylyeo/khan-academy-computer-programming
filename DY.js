@@ -25,7 +25,7 @@ DY.Processing = function(main, w, h){
                     that.functions[f]();
                 }
             }
-        }}
+        }
     );
 };
 
