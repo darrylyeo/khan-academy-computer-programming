@@ -1,0 +1,216 @@
+/**
+ * Featured on darryl-yeo.com:
+ * http://darryl-yeo.com/3d-easter-eggs
+ * 
+ * This isn't a contest entry! My contest entry is here:
+ * www.khanacademy.org/cs/floating-rainbow-3d-easter-eggs/4760525057294336
+ * 
+ * How did I achieve the awesome-looking 3D effect for my easter eggs? Simple!
+ */
+
+//This controls how many parts make up the egg. The higher the number, the smoother (and laggier) the gradients will render.
+var gradientStops = 11;
+
+/**
+ * Draws a half egg shape at a specified horizontal scale. Multiple half-egg shapes transformed at different horizontal scales will make up the entire egg. What happens when you alter the shape?
+ */
+var halfEgg = function(horizontalScale){
+    pushMatrix();
+        scale(horizontalScale, 1);
+        beginShape();
+        vertex(0, -340);
+        bezierVertex(60, -340, 120, -220, 125, -170);
+        bezierVertex(150, -40, 60, 0, 0, 0);
+        endShape();
+    popMatrix();
+};
+
+
+
+
+//The current design out of the designs listed above. 0 corresponds to a "mixed basket" of all the designs.
+var design = 0;
+
+//The total number of egg designs I made.
+var totalDesigns = 5;
+
+//Function adapted from http://axonflux.com/handy-rgb-to-hsl-and-rgb-to-hsv-color-model-c
+var hsvToRgb = function(h, s, v){
+    h /= 255; s /= 255; v /= 255;
+    
+    var r, g, b;
+
+    var i = Math.floor(h * 6);
+    var f = h * 6 - i;
+    var p = v * (1 - s);
+    var q = v * (1 - f * s);
+    var t = v * (1 - (1 - f) * s);
+
+    switch(i % 6){
+        case 0: r = v; g = t; b = p; break;
+        case 1: r = q; g = v; b = p; break;
+        case 2: r = p; g = v; b = t; break;
+        case 3: r = p; g = q; b = v; break;
+        case 4: r = t; g = p; b = v; break;
+        case 5: r = v; g = p; b = q; break;
+    }
+
+    return color(r * 255, g * 255, b * 255);
+};
+
+/**
+ * Changes an HSB color's saturation.
+ */
+var colorWithSaturation = function(c, s){
+    colorMode(HSB);
+    c = color(hue(c), s, brightness(c), alpha(c));
+    colorMode(RGB);
+    return c;
+};
+
+/**
+ * Changes an HSB color's alpha.
+ */
+var colorWithAlpha = function(c, a){
+    colorMode(HSB);
+    c = color(hue(c), saturation(c), brightness(c), a);
+    colorMode(RGB);
+    return c;
+};
+
+/**
+ * Draws an egg.
+ * 
+ * @param design            Specifies the egg's design.
+ * @param colormode         Used for the color stops of the gradient [see note below].
+ * @param color1, color2    Start and end colors that male up the egg's gradient.
+ * @param yOffset           Controls how far off the "ground" the egg floats.
+ * 
+ * Note: I use HSB colors that are converted to RGB colors to make the gradients, because the colors look much smoother this way. Also, not using HSB prevents lerpColor() from cycling across the hue wheel - a gradient from red to orange will transition directly from red to orange, while a gradient from magenta to red will cycle BACKWARDS across all the other colors instead of looping around. (The only cases where this is a wanted behavior are the magic rainbow eggs - we want them to cycle through all the hues, so we specify HSB as the color mode instead of RGB.)
+ */
+var egg = function(design, colormode, color1, color2, yOffset){
+    colorMode(colormode);
+    
+    //Shadow below the egg. 
+    fill(0, 0, 0, 40);
+    noStroke();
+    ellipse(0, 30, 180 + yOffset, 50 + yOffset);
+    
+    translate(0, yOffset);
+    
+    //Glowing Egg Design
+    if(design === 4){
+        colorMode(RGB);
+        //Stroke each half egg shape with a thick transparent white stroke.
+        stroke(255, 255, 255, 80);
+        strokeWeight(10);
+        colorMode(colormode);
+    }
+    //Ghost Egg Design (Spooooky!)
+    if(design === 5){
+        //Make the gradient end color the same as the start color, then lower the opacity.
+        color1 = colorWithAlpha(color1, 50);
+        color2 = colorWithAlpha(color1, 50);
+    }
+    
+    //The following loop draws an egg "slice" for the number of specified gradientStops.
+    //Each iteration draws a set of two half-eggs, from the outside in. The inner loop controls the two draws.
+    //"i" represents how far an egg "slice" is along the color gradient.
+    //"i * 180" represents the angle that the current egg "slice" is pointing (if we looked at the egg from the top down.)
+    //"n" is incremented once for each iteration, used for eggs with Striped Designs.
+    var n = 0;
+    for(var g = 0; g <= 0.5; g += 1/gradientStops){
+        var i = g;
+        for(var loop2 = 1; loop2 <= 2; loop2++){
+            pushMatrix();
+            translate((i - 0.5) * max(1200 - pow(frameCount, 1.2), 0), 0);
+            
+            var gradientStop = lerpColor(color1, color2, i);
+            fill(gradientStop);
+            //Eggs with Striped Designs will have a lighter fill for every other egg "slice" (even values of "n").
+            if(design === 2 && n % 2 === 0){
+                fill(colorWithSaturation(gradientStop, 160));
+            }
+            halfEgg(-cos(i * 180));
+            popMatrix();
+            
+            //After drawing the first egg slice in the first iteration of this inner loop, draw the opposite egg slice on the other half of the egg.
+            i = 1 - g;
+        }
+        n++;
+    }
+    //Patch up the vertical gap in the egg's center with a rect.
+    noStroke();
+    rect(-2, -340, 4, 340);
+    
+    //Spotted Egg Design
+    if(design === 3){
+        //Draw 2 bands of spots, using cosine waves to control the rotation and size of each spot.
+        
+        fill(0, 0, 0, 50);
+        for(var i = 0; i <= 1; i += 1/13){
+            pushMatrix();
+                rotate(cos(i * 180) * 10);
+                ellipse(cos(i * 180) * 105, -155 + sin(i * 180) * 90, sin(i * 180) * 20, 40);
+            popMatrix();
+        }
+        
+        for(var i = 0; i <= 1; i += 1/10){
+            pushMatrix();
+                translate(cos(i * 180) * 85, -275 + sin(i * 180) * 50);
+                rotate(-cos(i * 180) * 25);
+                ellipse(0, 0, sin(i * 180) * 20, sin(i * 180) * 10 + 20);
+            popMatrix();
+        }
+    }
+    
+    //Add a shine to make the eggs look appealing!
+    colorMode(RGB);
+    fill(255, 255, 255, 100);
+    noStroke();
+    pushMatrix();
+        translate(50, -270);
+        rotate(-30);
+        if(frameCount >= 400){
+            scale(min((frameCount - 400) * 0.05, 1));
+            ellipse(0, 0, 20, 45);
+        }
+    popMatrix();
+};
+
+mouseClicked = function(){
+    design = (design + 1) % (totalDesigns) + 1;
+};
+
+cursor(HAND);
+
+draw = function() {
+    resetMatrix();
+    
+    colorMode(RGB);
+    background(254, 255, 204);
+    
+    var color1 = hsvToRgb(15, 235, 250);
+    var color2 = hsvToRgb(35, 255, 255);
+    
+    textAlign(CENTER, CENTER);
+    textSize(30);
+    fill(color1);
+    text("Same shape,", width / 2, 50);
+    fill(color2);
+    text("Different horizontal scales.", width / 2, height - 50);
+    
+    translate(width / 2, height / 2 + 75);
+    scale(0.5);
+    
+    egg(
+        design, //design
+        RGB, // colormode
+        color1, color2, // color1, color2
+        0 // yOffset
+    );
+    
+    if(frameCount === 400){
+        println("Thanks for all of your support, but don't forget\nto check out my ACTUAL contest entry!\nwww.khanacademy.org/cs/easter-eggs/4760525057294336");
+    }
+};
