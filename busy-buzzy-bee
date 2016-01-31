@@ -1,0 +1,592 @@
+// Featured on darryl-yeo.com: darryl-yeo.com/busy-buzzy-bee
+
+/**
+ * Busy Buzzy Bee!
+ * by DY
+ * 
+ * The mutualistic relationship between bees and flowers.
+ * 
+ * While bees collect nectar from flowers to make food, pollen
+ * attaches to the bees' hairy bodies. When the bees move on, pollen
+ * spreads around the flowers. While the bees are able to eat, the
+ * flowers are able to reproduce! Such a relationship where both
+ * species benefit is known as a mutualistic relationship.
+ * 
+ * Click anywhere to make the bee fly around. If you click on the
+ * middle of a flower, the bee will land on it!
+ */
+
+//Programming Experience: 24 months+  |  Understanding of Intro to JS Course: 100%
+
+
+
+
+
+
+
+//The bee. Will be assigned a Bee object later.
+var bee;
+//var maxBees = 30;
+
+//An array of Flower objects.
+var flowers = [];
+//The number of "rows" of flowers.
+var flowerRows = 6;
+//The ID of the flower under the cursor.
+var selectedFlowerNumber;
+
+//The y position of the horizon.
+var horizon = 100;
+
+//An array of circles that are generated when clicked.
+var clickCircles = [];
+
+//Adapted from https://github.com/danro/easing-js/blob/master/easing.js
+var easeInOutSine = function(pos) {
+    return (-0.5 * (Math.cos(Math.PI*pos) -1));
+};
+
+var Bee = function(x, y){
+    //Current Position
+    this.position = new PVector(x, y);
+    //Position the bee is coming from
+    this.fromPosition = new PVector(x, y);
+    //How far away the bee's target position is
+    this.targetOffset = new PVector(0, 0);
+    //The bee's percent distance from the fromPosition to the target position
+    this.distance = 0;
+    
+    //Scale (calculated in terms of y position)
+    this.scale = 1;
+    
+    //Whether the bee should be reflected horizontally
+    this.facingLeft = false;
+    
+    //How "ready" the bee is to start flying around, as a percent.
+    this.flyTransition = 1;
+    //How "bent" the bee's body is as a percent.
+    this.bend = 1;
+    //Whether the bee is currently flying around.
+    this.flying = true;
+    
+    //Generate an array of hair strands for every other degree angle.
+    this.hair = [];
+    for(var a = 0; a < 360; a += 2){
+        var hairStrand = {
+            angle: a,
+            vertices: []
+        };
+        for(var h = 0; h < 4; h++){
+            hairStrand.vertices.push(new PVector(random(-3, 3), random(-3, 3)));
+        }
+        this.hair.push(hairStrand);
+    }
+    
+    //The ID of the flower the bee has landed on.
+    this.onFlower = undefined;
+    //The ID of the flower the bee has previously landed on. 
+    this.previouslyOnFlower = undefined;
+};
+
+Bee.prototype.update = function(){
+    //Make sure we render after an update
+    this.rendered = false;
+    
+    //Vary the scale based on the y position.
+    this.scale = 0.1 + max((this.position.y - horizon) * 0.004, 0);//0.1 + pow(max(this.position.y - horizon, 0), 1.5) * 0.0003;
+    
+    //If the bee is targeting a flower and isn't anywhere close to it, get the bee into "flight" mode.
+    this.flying = this.onFlower ? (this.position.dist(new PVector(this.fromPosition.x + this.targetOffset.x, this.fromPosition.y + this.targetOffset.y)) > 20) : true;
+    
+    //If in "flight" mode, increase the bee's "readiness" for flying, otherwise, decrease it. (Its "readiness" is a percent, so keep it between 0 and 1).
+    this.flyTransition += this.flying ? 0.03 : -0.03;
+    this.flyTransition = constrain(this.flyTransition, 0, 1);
+    //Finally, change the bee's "bentness" as a sinusoidal function of its "readiness."
+    this.bend = easeInOutSine(this.flyTransition);
+    
+    //Update the bee's position.
+    this.position = new PVector(
+        this.fromPosition.x + this.targetOffset.x * easeInOutSine(this.distance),
+        this.fromPosition.y + this.targetOffset.y * easeInOutSine(this.distance)
+    );
+    
+    //If the bee's "readiness" for flying is over 80%, fly closer to the target flower.
+    if(this.bend > 0.8){
+        this.distance = min(this.distance + 0.025, 1);
+    }
+};
+
+//Makes the bee move to a given point.
+Bee.prototype.goTo = function(position){
+    //If the point lies to the left of the current position, face left
+    this.facingLeft = position.x < this.position.x;
+    
+    //We are flying from the position the bee is currently at
+    this.fromPosition = this.position;
+    //The target point's distance is the target point's coordinates minus the "from" point's coordinates.
+    this.targetOffset = position;
+    this.targetOffset.sub(this.fromPosition);
+    //We are now 0% of the way to the target point.
+    this.distance = 0;
+};
+
+//Draws the bee. Various body parts are rotated at different degrees based on the bee's "bend" property.
+Bee.prototype.draw = function(){
+    // Render only once per update().
+    if(this.rendered){
+        return;
+    }else{
+        this.rendered = true;
+    }
+    
+    pushMatrix();
+    translate(this.position.x, this.position.y);
+    if(this.onFlower){
+        var flower = flowers[this.onFlower];
+        translate(flower.horizontalOffset() * this.distance, 0);
+        rotate(flower.angle * (1 - this.bend) / 2);
+    }
+    if(this.previouslyOnFlower){
+        var previousFlower = flowers[this.previouslyOnFlower];
+        translate(previousFlower.horizontalOffset() * (1 - this.distance), 0);
+        rotate(previousFlower.angle * this.bend / 2);
+    }
+    scale(this.scale * (this.facingLeft ? -1 : 1), this.scale);
+    translate(0, -this.bend * (40 + sin(frameCount * 6)  * 10) - 28);
+    
+    noStroke();
+    
+    //Back Wing
+    pushMatrix();
+        translate(10, 0);
+        rotate(4 - sin(frameCount * 100) * 4 * this.bend);
+        
+        fill(255, 231, 112, 220);
+        noStroke();
+        beginShape();
+        vertex(0, 0);
+        bezierVertex(-19, -24, -40, -31, -68, -43);
+        vertex(-76, -55);
+        bezierVertex(-71, -55, -64, -54, -61, -54);
+        bezierVertex(-30, -40, -15, -30, 4, 0);
+        endShape();
+    popMatrix();
+    
+    pushMatrix();
+        //translate(-this.bend  * 7.5, -this.bend  * 7.5);
+        rotate(-this.bend * 30);
+        
+        //Body
+        noStroke();
+        for(var i = 2; i <= 7; i++){
+            pushMatrix();
+            translate(-5, 163);
+            rotate(-29 + i * 3);
+            translate(6, -163);
+            rotate(i);
+            fill(i % 2 === 0 ? color(255, 213, 0) : color(153, 125, 0));
+            ellipse(0, 0, 90 - i * 6, 45 + sin(i / 8 * 158) * 15);
+            popMatrix();
+        }
+        
+        //Back Right Leg
+        pushMatrix();
+            translate(-21, 27);
+            scale(1.2);
+            
+            //1
+            stroke(97, 61, 0, 250);
+            strokeWeight(4);
+            bezier(6, -3, 3, 0, -18, -10, -18, -10);
+            
+            translate(-18, -10);
+            rotate(6 - this.bend * 20);
+            translate(18, 10);
+            
+            //2
+            fill(97, 61, 0, 250);
+            noStroke();
+            beginShape();
+                vertex(-20, -11);
+                bezierVertex(-23, -8, -45, 8, -38, 15);
+                bezierVertex(-27, 25, -15, -21, -16, -10);
+            endShape();
+            
+            //3
+            fill(97, 68, 0, 250);
+            beginShape();
+                vertex(-39, 12);
+                bezierVertex(-47, 18, -57, 30, -53, 33);
+                vertex(-49, 36);
+                bezierVertex(-34, 34, -31, 9, -32, 15);
+            endShape();
+            
+            //4
+            noFill();
+            stroke(130, 59, 0, 250);
+            strokeWeight(2);
+            bezier(-50, 33, -54, 40, -58, 30, -65, 35);
+        popMatrix();
+    popMatrix();
+    
+    //Hair
+    pushMatrix();
+        translate(0, 0);
+        rotate(-this.bend * 15);
+        //scale(1, 0.9);
+        
+        noFill();
+        stroke(255, 223, 64);
+        strokeWeight(0.65);
+        for(var h = 0; h < this.hair.length; h++){
+            var hairStrand = this.hair[h];
+            rotate(hairStrand.angle);
+            beginShape();
+            for(var v = 0; v < hairStrand.vertices.length; v++){
+                var vrtx = hairStrand.vertices[v];
+                vertex(v * 7.5 + vrtx.x, vrtx.y);
+            }
+            endShape();
+        }
+        stroke(255, 223, 64, 150);
+        strokeWeight(45);
+        point(0, 0);
+    popMatrix();
+    
+    //Middle Right Leg
+    pushMatrix();
+        rotate(-this.bend * 15);
+        translate(-22, 14);
+        scale(1.2, 1.3);
+        
+        //1
+        fill(97, 61, 0, 250);
+        noStroke();
+        beginShape();
+        vertex(-2, 0);
+        bezierVertex(-4, 0, -4, 20, -3, 20);
+        vertex(3, 20);
+        bezierVertex(4, 20, 4, 0, 0, 0);
+        endShape();
+        
+        //2
+        beginShape();
+        vertex(-2, 20);
+        bezierVertex(-5, 20, -5, 40, -2, 40);
+        vertex(3, 41);
+        bezierVertex(5, 40, 4, 20, 2, 20);
+        endShape();
+        
+        //3
+        noFill();
+        stroke(130, 59, 0, 250);
+        strokeWeight(2);//-50, 33
+        bezier(1, 40, -2, 50, -6, 39, -10, 44);
+    popMatrix();
+    
+    //Front Right Leg
+    pushMatrix();
+        rotate(-this.bend * 15);
+        translate(0 - this.bend * 3, 18);
+        scale(1.2, 1.7);
+        rotate(this.bend * 8);
+        
+        //1
+        fill(97, 61, 0, 250);
+        noStroke();
+        beginShape();
+        vertex(-2, 0);
+        bezierVertex(-4, 0, -4, 20, 3, 20);
+        bezierVertex(4, 20, 4, 0, 0, 0);
+        endShape();
+        
+        //2
+        noFill();
+        stroke(130, 59, 0, 250);
+        strokeWeight(2);//1, 40
+        bezier(2, 19, 3, 27, 8, 20, 9, 23);
+    popMatrix();
+    
+    rotate(-this.bend * 3);
+    
+    //Front Wing
+    pushMatrix();
+        translate(-5, 0);
+        rotate(-10 + sin(frameCount * 100) * 4 * this.bend);
+        
+        fill(255, 231, 112, 220);
+        noStroke();
+        beginShape();
+        vertex(0, 0);
+        bezierVertex(-75, -44, -80, -39, -95, -50);
+        vertex(-86, -55);
+        bezierVertex(-65, -50, -65, -50, -60, -50);
+        bezierVertex(-45, -40, -15, -30, 4, 0);
+        endShape();
+        
+        noFill();
+        stroke(200, 100, 0, 120);
+        strokeWeight(1);
+        //bezier(0, 0, -75, -44, -60, -32, -85, -44.5);
+    popMatrix();
+    
+    //Wing Joint
+    fill(110, 53, 6);
+    noStroke();
+    ellipse(-8, -2, 8, 6);
+    ellipse(-3, -1, 6, 8);
+    
+    //Face
+    pushMatrix();
+        translate(30, 30);
+        
+        //Mouth
+        pushMatrix();
+            fill(158, 63, 0);
+            rotate(-12);
+            ellipse(0, 0, 7, 13);
+        popMatrix();
+        
+        //Head
+        fill(120, 104, 0);
+        pushMatrix();
+            beginShape();
+                vertex(-3, 1);
+                bezierVertex(-15, -5, -30, -30, -20, -40);
+                bezierVertex(-17, -45, 5, -55, 8, -35);
+                bezierVertex(10, -25, 5, -3, 3.5, 1);
+                bezierVertex(1, -1, -1, -1, -3, 1);
+            endShape();
+        popMatrix();
+    
+        //Eye
+        pushMatrix();
+            translate(-5, -10);
+            fill(74, 50, 35);
+            noStroke();
+            beginShape();
+                vertex(0, 0);
+                bezierVertex(-5, 2, -11, -4, -15, -15);
+                bezierVertex(-17, -21, -15, -30, -10, -30);
+                bezierVertex(0, -30, 4, -0, 0, 0);
+            endShape();
+            translate(-5, -20);
+            rotate(-20);
+            fill(255, 255, 255, 170);
+            ellipse(0, 0, 3, 10);
+        popMatrix();
+        
+        //Antennae
+        stroke(74, 54, 9);
+        strokeWeight(2.5);
+        pushMatrix();
+            translate(7, -28);
+            line(0, 0, 7, -10);
+            line(7, -10, 30, -20);
+        popMatrix();
+        pushMatrix();
+            translate(3, -26);
+            line(0, 0, -1, -12);
+            line(-1, -12, 3, -9);
+        popMatrix();
+    popMatrix();
+    
+    pushMatrix();
+        translate(0, 0);
+        beginShape();
+        vertex(0, 0);
+        endShape();
+    popMatrix();
+    
+    popMatrix();
+};
+
+var Flower = function(id, x, y, s){
+    //The flower's position in the "flowers" array. Higher ids generally indicate greater y coordinates.
+    this.id = id;
+    
+    this.position = new PVector(x, y);
+    this.scale = s;
+    
+    this.angle = 0;
+    
+    this.transformFactors = [
+        [360/7.5, sin(frameCount) * 1],
+        [83.8, sin(frameCount) * 1],
+    ][floor(random(0, 2))];
+    
+    //Generate random inner and outer colors.
+    colorMode(HSB);
+    this.petalColor = color(random(127, 255 + 60) % 255, 255, 255);
+    this.innerColor = color(random(255), 255, 255, 220);
+    colorMode(RGB);
+    
+    //Vary the number of petals based on a few Fibonacci numbers!
+    this.petals = [13, 21, 34][floor(random(3))];
+    this.petalLength = random(50, 60);
+    this.petalWidth = random(7, 17);
+    
+    //How far from side to side the flower sways.
+    this.sway = random(5, 15);
+    //How fast the flower sways.
+    this.swaySpeed = random(1, 3);
+    //The horizontal position of the control points of the bezier that draws the stem
+    this.stemControl1 = random(-40, 40);
+    this.stemControl2 = random(-40, 40);
+    
+    //Vary the height of the flower
+    this.height = random(100, 150);
+};
+
+//Checks if the mouse is hovered over the middle top of the flower
+Flower.prototype.checkMouseCollision = function() {
+    return dist(mouseX, mouseY, this.position.x + this.horizontalOffset(), this.top()) < 25 * this.scale;
+};
+
+//Returns how far horizontally the flower has swayed
+Flower.prototype.horizontalOffset = function(){
+    return sin(this.angle) * this.height * this.scale;
+};
+
+//Returns the y coordinate of the middle top of the flower
+Flower.prototype.top = function(){
+    return this.position.y - cos(this.angle) * this.height * this.scale;
+};
+
+//Draws the flower.
+Flower.prototype.draw = function() {
+    pushMatrix();
+    translate(this.position.x, this.position.y);
+    scale(this.scale);
+    this.angle = sin(frameCount * this.swaySpeed) * this.sway;
+    rotate(this.angle);
+    
+    //Stem
+    noFill();
+    stroke(114, 255, 82);
+    strokeWeight(7);
+    bezier(0, 0, this.stemControl1, -this.height/3, this.stemControl2, -this.height*2/3, 0, -this.height);
+    
+    //Petals
+    fill(this.petalColor);
+    noStroke();
+    translate(0,-this.height);
+    scale(1, 0.75);
+    for(var a = 0; a < this.petals; a++){
+        pushMatrix();
+        rotate(a * this.transformFactors[0]);
+        translate(40, a * this.transformFactors[1]);
+        rotate(15);
+        ellipse(0, 0, this.petalLength, this.petalWidth);
+        popMatrix();
+    }
+    
+    //Inner Petals (Fill white if mouse is on it)
+    fill(this.checkMouseCollision() ? color(255) : this.innerColor);
+    for(var a = 0; a < 360; a += 30){
+        pushMatrix();
+        rotate(a);
+        ellipse(15, 0, 30, 7);
+        popMatrix();
+    }
+    
+    popMatrix();
+};
+
+
+
+//Initialize the bee
+bee = new Bee(width / 2 + 20, height - 80);
+
+//Make a whole bunch of flowers. Their scale is calculated as a cubic function in terms of their y position.
+for(var y = 0; y < flowerRows; y++){
+    for(var x = 0; x < width; x += (y + 1)*30){
+        var yPosition = horizon + 20 + pow(y, 3) * (2.2 + random(-0.5, 0.5));
+        var s = 0.1 + (yPosition - horizon) * 0.004;
+        flowers.push(new Flower(flowers.length, x + random(-20, 20), yPosition, s));
+    }
+}
+
+draw = function() {
+    //Draw the sky.
+    background(186, 233, 255);
+    
+    //Draw the ground.
+    fill(170, 214, 39);
+    noStroke();
+    rect(0, horizon, width, height - horizon);
+    
+    //Update the bee.
+    bee.update();
+    
+    //Draw all the flowers from top to bottom, and draw the bee once we get to the first flower whose y position is below the bee's.
+    for(var f = 0; f < flowers.length; f++){
+        var flower = flowers[f];
+        flower.draw();
+        if(flower.top() > bee.position.y && f >= bee.onFlower){
+            bee.draw();
+        }
+    }
+    //If the bee was never drawn from the above, draw it. It makes sure it only renders once.
+    bee.draw();
+    
+    //Draw and update click circles.
+    noStroke();
+    for(var c = 0; c < clickCircles.length; c++){
+        var clickCircle = clickCircles[c];
+        fill(255, 213, 0, 255 - clickCircle.size * 0.8);
+        strokeWeight(2);
+        ellipse(clickCircle.x, clickCircle.y, clickCircle.size * max(clickCircle.y, horizon) / 600, clickCircle.size * 0.75 * max(clickCircle.y, horizon) / 600);
+        
+        clickCircle.size += 14;
+    }
+    //Remove click circles that are too large
+    var updatedClickCircles = [];
+    for(var c = 0; c < clickCircles.length; c++){
+        var clickCircle = clickCircles[c];
+        if(clickCircle.size <= sqrt(width*width+height*height)){
+            updatedClickCircles.push(clickCircle);
+        }
+    }
+    clickCircles = updatedClickCircles;
+};
+
+mouseMoved = function(){
+    //Check which flower the mouse is over.
+    for(var f = 0; f < flowers.length; f++){
+        var flower = flowers[f];
+        if(flower.checkMouseCollision()){
+            //If the mouse is over a flower, save its ID and change the cursor to a hand icon
+            selectedFlowerNumber = f;
+            cursor(HAND);
+            //End this function.
+            return;
+        }
+    }
+    //If none of them are a match, don't save an ID and change the cursor back.
+    selectedFlowerNumber = undefined;
+    cursor(ARROW);
+};
+
+mouseClicked = function(){
+    if(selectedFlowerNumber){
+        //If there is a saved flower ID from above, make the bee go to that flower.
+        var flower = flowers[selectedFlowerNumber];
+        bee.goTo(new PVector(flower.position.x + flower.horizontalOffset(), flower.top()));
+    }else{
+        //Otherwise, just go to the mouse's coordinates.
+        bee.goTo(new PVector(mouseX, mouseY));
+    }
+    //Set the bee's current and previous flower IDs.
+    if(bee.onFlower){
+        bee.previouslyOnFlower = bee.onFlower;
+    }
+    bee.onFlower = selectedFlowerNumber;
+    
+    //Add a circle to the array
+    clickCircles.push({
+        x: mouseX,
+        y: mouseY,
+        size: 3,
+    });
+};
