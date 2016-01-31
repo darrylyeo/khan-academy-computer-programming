@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<!--
+    SpinnyThing
+    by DY
+    
+    Made using CSS @keyframes
+    HTML markup used: One <div>.
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>SpinnyThing</title>
+        <style>
+            body {
+                text-align: center;
+                height: 100%;
+                padding-top: 10%;
+                overflow: hidden;
+            }
+            div {
+                -webkit-animation-name: SpinnyThing;
+                -webkit-animation-delay: 1s;
+                -webkit-animation-duration: 15s;
+                -webkit-animation-iteration-count: infinite;
+                -moz-animation-name: SpinnyThing;
+                -moz-animation-delay: 1s;
+                -moz-animation-duration: 15s;
+                -moz-animation-iteration-count: infinite;
+                animation-name: SpinnyThing;
+                animation-delay: 1s;
+                animation-duration: 15s;
+                animation-iteration-count: infinite;
+                box-sizing: border-box;
+                display: inline-block;
+                vertical-align: middle;
+                top: 50%;
+                
+                background: hsl(0, 80%, 60%);
+                border-radius: 50%;
+                border-top: hsl(0, 90%, 70%) solid 25px;
+                border-left: hsl(0, 70%, 50%) solid 20px;
+                border-bottom: hsl(0, 50%, 80%) solid 25px;
+                border-right: hsl(0, 50%, 50%) solid 15px;
+                box-shadow: hsl(0, 50%, 70%) 0 0 100px;
+                outline: hsla(0, 90%, 50%, 0) solid 1000px;
+                width: 250px;
+                height: 250px;
+            }
+            
+            @keyframes SpinnyThing {
+                from, to {
+                    background: hsl(0, 80%, 60%);
+                    border-radius: 50%;
+                    border-top: hsl(0, 90%, 70%) solid 25px;
+                    border-left: hsl(0, 70%, 50%) solid 20px;
+                    border-bottom: hsl(0, 50%, 80%) solid 25px;
+                    border-right: hsl(0, 50%, 50%) solid 15px;
+                    box-shadow: hsl(0, 50%, 70%) 0 0 100px;
+                    outline: hsla(0, 90%, 50%, 0) solid 1000px;
+                    width: 250px;
+                    height: 250px;
+                }
+                12.5% {
+                    background: hsla(32, 80%, 70%, 0);
+                    border-radius: 0;
+                    border-top: hsl(32, 80%, 60%) solid 200px;
+                    border-left: hsl(32, 80%, 50%) solid 100px;
+                    border-bottom: transparent solid 0px;
+                    border-right: hsl(32, 100%, 70%) solid 100px;
+                    box-shadow: hsl(32, 100%, 70%) 10px 10px 30px;
+                    width: 150px;
+                    height: 250px;
+                    transform: rotate(45deg);
+                }
+                25% {
+                    background: hsl(64, 80%, 70%);
+                    border-radius: 40%;
+                    border-top: hsl(64, 50%, 70%) solid 150px;
+                    border-left: hsl(64, 80%, 50%) solid 150px;
+                    border-bottom: hsl(64, 60%, 80%) solid 150px;
+                    border-right: hsl(64, 80%, 50%) solid 150px;
+                    box-shadow: hsl(64, 50%, 70%) 0 0 50px;
+                    outline: transparent dotted 0px;
+                    width: 300px;
+                    height: 300px;
+                    transform: rotate(90deg);
+                }
+                50% {
+                    background: hsl(128, 80%, 70%);
+                    border-radius: 0;
+                    border-top: hsl(128, 20%, 80%) solid 60px;
+                    border-left: hsl(128, 40%, 70%) solid 20px;
+                    border-bottom: hsl(128, 60%, 60%) solid 30px;
+                    border-right: hsl(128, 80%, 50%) solid 40px;
+                    box-shadow: hsl(128, 50%, 70%) 0 0 50px;
+                    outline: hsla(128, 90%, 50%, 0.1) dotted 80px;
+                    width: 250px;
+                    height: 250px;
+                    transform: rotate(180deg);
+                }
+                62.5% {
+                    background: hsl(144, 80%, 70%);
+                    border-radius: 100% 0%;
+                    border-top: hsl(144, 20%, 80%) solid 50px;
+                    border-left: hsl(144, 40%, 70%) solid 40px;
+                    border-bottom: hsl(144, 60%, 60%) solid 70px;
+                    border-right: hsl(144, 80%, 50%) solid 10px;
+                    box-shadow: hsl(144, 50%, 70%) 0 0 50px;
+                    outline: hsla(144, 90%, 50%, 0) solid 10px;
+                    width: 270px;
+                    height: 270px;
+                    transform: rotate(225deg);
+                }
+                75% {
+                    background: hsl(175, 80%, 70%);
+                    border-radius: 25% 30%;
+                    border-top: hsl(175, 20%, 80%) solid 50px;
+                    border-left: hsl(175, 40%, 70%) solid 40px;
+                    border-bottom: hsl(175, 60%, 60%) solid 70px;
+                    border-right: hsl(175, 80%, 50%) solid 10px;
+                    box-shadow: hsl(175, 50%, 70%) 0 0 50px;
+                    width: 270px;
+                    height: 270px;
+                    transform: rotate(270deg);
+                }
+                87.5% {
+                    background: hsl(207, 80%, 70%);
+                    border-radius: 10%;
+                    border: hsl(207, 85%, 60%) solid 20px;
+                    border-style: double;
+                    box-shadow:
+                        hsl(207, 90%, 50%) 50px 70px 0px,
+                        hsl(207, 95%, 40%) -70px 50px 0px,
+                        hsl(207, 100%, 30%) -50px -70px 0px,
+                        hsl(207, 100%, 20%) 70px -50px 0px;
+                    width: 230px;
+                    height: 230px;
+                    transform: rotate(315deg);
+                }
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+            @-moz-keyframes SpinnyThing {
+                from, to {
+                    background: hsl(0, 80%, 60%);
+                    border-radius: 50%;
+                    border-top: hsl(0, 90%, 70%) solid 25px;
+                    border-left: hsl(0, 70%, 50%) solid 20px;
+                    border-bottom: hsl(0, 50%, 80%) solid 25px;
+                    border-right: hsl(0, 50%, 50%) solid 15px;
+                    box-shadow: hsl(0, 50%, 70%) 0 0 100px;
+                    outline: hsla(0, 90%, 50%, 0) solid 1000px;
+                    width: 250px;
+                    height: 250px;
+                }
+                12.5% {
+                    background: hsla(32, 80%, 70%, 0);
+                    border-radius: 0;
+                    border-top: hsl(32, 80%, 60%) solid 200px;
+                    border-left: hsl(32, 80%, 50%) solid 100px;
+                    border-bottom: transparent solid 0px;
+                    border-right: hsl(32, 100%, 70%) solid 100px;
+                    box-shadow: hsl(32, 100%, 70%) 10px 10px 30px;
+                    width: 150px;
+                    height: 250px;
+                    -moz-transform: rotate(45deg);
+                }
+                25% {
+                    background: hsl(64, 80%, 70%);
+                    border-radius: 40%;
+                    border-top: hsl(64, 50%, 70%) solid 150px;
+                    border-left: hsl(64, 80%, 50%) solid 150px;
+                    border-bottom: hsl(64, 60%, 80%) solid 150px;
+                    border-right: hsl(64, 80%, 50%) solid 150px;
+                    box-shadow: hsl(64, 50%, 70%) 0 0 50px;
+                    outline: transparent dotted 0px;
+                    width: 300px;
+                    height: 300px;
+                    -moz-transform: rotate(90deg);
+                }
+                50% {
+                    background: hsl(128, 80%, 70%);
+                    border-radius: 0;
+                    border-top: hsl(128, 20%, 80%) solid 60px;
+                    border-left: hsl(128, 40%, 70%) solid 20px;
+                    border-bottom: hsl(128, 60%, 60%) solid 30px;
+                    border-right: hsl(128, 80%, 50%) solid 40px;
+                    box-shadow: hsl(128, 50%, 70%) 0 0 50px;
+                    outline: hsla(128, 90%, 50%, 0.1) dotted 80px;
+                    width: 250px;
+                    height: 250px;
+                    -moz-transform: rotate(180deg);
+                }
+                62.5% {
+                    background: hsl(144, 80%, 70%);
+                    border-radius: 100% 0%;
+                    border-top: hsl(144, 20%, 80%) solid 50px;
+                    border-left: hsl(144, 40%, 70%) solid 40px;
+                    border-bottom: hsl(144, 60%, 60%) solid 70px;
+                    border-right: hsl(144, 80%, 50%) solid 10px;
+                    box-shadow: hsl(144, 50%, 70%) 0 0 50px;
+                    outline: hsla(144, 90%, 50%, 0) solid 10px;
+                    width: 270px;
+                    height: 270px;
+                    -moz-transform: rotate(225deg);
+                }
+                75% {
+                    background: hsl(175, 80%, 70%);
+                    border-radius: 25% 30%;
+                    border-top: hsl(175, 20%, 80%) solid 50px;
+                    border-left: hsl(175, 40%, 70%) solid 40px;
+                    border-bottom: hsl(175, 60%, 60%) solid 70px;
+                    border-right: hsl(175, 80%, 50%) solid 10px;
+                    box-shadow: hsl(175, 50%, 70%) 0 0 50px;
+                    width: 270px;
+                    height: 270px;
+                    -moz-transform: rotate(270deg);
+                }
+                87.5% {
+                    background: hsl(207, 80%, 70%);
+                    border-radius: 10%;
+                    border: hsl(207, 85%, 60%) solid 20px;
+                    border-style: double;
+                    box-shadow:
+                        hsl(207, 90%, 50%) 50px 70px 0px,
+                        hsl(207, 95%, 40%) -70px 50px 0px,
+                        hsl(207, 100%, 30%) -50px -70px 0px,
+                        hsl(207, 100%, 20%) 70px -50px 0px;
+                    width: 230px;
+                    height: 230px;
+                    -moz-transform: rotate(315deg);
+                }
+                to {
+                    -moz-transform: rotate(360deg);
+                }
+            }
+            @-webkit-keyframes SpinnyThing {
+                from, to {
+                    background: hsl(0, 80%, 60%);
+                    border-radius: 50%;
+                    border-top: hsl(0, 90%, 70%) solid 25px;
+                    border-left: hsl(0, 70%, 50%) solid 20px;
+                    border-bottom: hsl(0, 50%, 80%) solid 25px;
+                    border-right: hsl(0, 50%, 50%) solid 15px;
+                    box-shadow: hsl(0, 50%, 70%) 0 0 100px;
+                    outline: hsla(0, 90%, 50%, 0) solid 1000px;
+                    width: 250px;
+                    height: 250px;
+                }
+                12.5% {
+                    background: hsla(32, 80%, 70%, 0);
+                    border-radius: 0;
+                    border-top: hsl(32, 80%, 60%) solid 200px;
+                    border-left: hsl(32, 80%, 50%) solid 100px;
+                    border-bottom: transparent solid 0px;
+                    border-right: hsl(32, 100%, 70%) solid 100px;
+                    box-shadow: hsl(32, 100%, 70%) 10px 10px 30px;
+                    width: 150px;
+                    height: 250px;
+                    -webkit-transform: rotate(45deg);
+                }
+                25% {
+                    background: hsl(64, 80%, 70%);
+                    border-radius: 40%;
+                    border-top: hsl(64, 50%, 70%) solid 150px;
+                    border-left: hsl(64, 80%, 50%) solid 150px;
+                    border-bottom: hsl(64, 60%, 80%) solid 150px;
+                    border-right: hsl(64, 80%, 50%) solid 150px;
+                    box-shadow: hsl(64, 50%, 70%) 0 0 50px;
+                    outline: transparent dotted 0px;
+                    width: 300px;
+                    height: 300px;
+                    -webkit-transform: rotate(90deg);
+                }
+                50% {
+                    background: hsl(128, 80%, 70%);
+                    border-radius: 0;
+                    border-top: hsl(128, 20%, 80%) solid 60px;
+                    border-left: hsl(128, 40%, 70%) solid 20px;
+                    border-bottom: hsl(128, 60%, 60%) solid 30px;
+                    border-right: hsl(128, 80%, 50%) solid 40px;
+                    box-shadow: hsl(128, 50%, 70%) 0 0 50px;
+                    outline: hsla(128, 90%, 50%, 0.1) dotted 80px;
+                    width: 250px;
+                    height: 250px;
+                    -webkit-transform: rotate(180deg);
+                }
+                62.5% {
+                    background: hsl(144, 80%, 70%);
+                    border-radius: 100% 0%;
+                    border-top: hsl(144, 20%, 80%) solid 50px;
+                    border-left: hsl(144, 40%, 70%) solid 40px;
+                    border-bottom: hsl(144, 60%, 60%) solid 70px;
+                    border-right: hsl(144, 80%, 50%) solid 10px;
+                    box-shadow: hsl(144, 50%, 70%) 0 0 50px;
+                    outline: hsla(144, 90%, 50%, 0) solid 10px;
+                    width: 270px;
+                    height: 270px;
+                    -webkit-transform: rotate(225deg);
+                }
+                75% {
+                    background: hsl(175, 80%, 70%);
+                    border-radius: 25% 30%;
+                    border-top: hsl(175, 20%, 80%) solid 50px;
+                    border-left: hsl(175, 40%, 70%) solid 40px;
+                    border-bottom: hsl(175, 60%, 60%) solid 70px;
+                    border-right: hsl(175, 80%, 50%) solid 10px;
+                    box-shadow: hsl(175, 50%, 70%) 0 0 50px;
+                    width: 270px;
+                    height: 270px;
+                    -webkit-transform: rotate(270deg);
+                }
+                87.5% {
+                    background: hsl(207, 80%, 70%);
+                    border-radius: 10%;
+                    border: hsl(207, 85%, 60%) solid 20px;
+                    border-style: double;
+                    box-shadow:
+                        hsl(207, 90%, 50%) 50px 70px 0px,
+                        hsl(207, 95%, 40%) -70px 50px 0px,
+                        hsl(207, 100%, 30%) -50px -70px 0px,
+                        hsl(207, 100%, 20%) 70px -50px 0px;
+                    width: 230px;
+                    height: 230px;
+                    -webkit-transform: rotate(315deg);
+                }
+                to {
+                    -webkit-transform: rotate(360deg);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div></div>
+    </body>
+</html>
