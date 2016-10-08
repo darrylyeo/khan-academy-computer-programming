@@ -1,6 +1,6 @@
 // Uncomments
-var style = document.getElementsByTagName("style")[0];
-style.innerHTML = style.innerHTML.replace(/\/\*\*(.+?)\*\//gi, "$1");
+//var style = document.getElementsByTagName("style")[0];
+//style.innerHTML = style.innerHTML.replace(/\/\*\*(.+?)\*\//gi, "$1");
 
 
 
