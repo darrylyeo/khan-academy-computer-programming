@@ -423,7 +423,7 @@ function getAbout(){
     	$("#profile .nickname").text(data.nickname),
     	$("#profile .username").text("@" + data.username);
     	$("#profile .joined").text("Joined " + date)
-    	$("#profile .bio").text(data.bio);
+    	$("#profile .bio").text(markdown(data.bio));
     	$('#profile').hide().fadeIn(1000)
     	
     	var days = daysDifference(d, Date.now());
