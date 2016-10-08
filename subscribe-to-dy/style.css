@@ -278,6 +278,7 @@ article.active h1 {
 	
 	height: 180%;
 	height: calc(100vh - 56rem);
+	height: calc(100vh - 80rem);
 	width: 200%;
 	-webkit-transform: scale(0.5);
 	-ms-transform: scale(0.5);
