@@ -336,7 +336,8 @@ nav:not(.active) + #back-button {
 	    transform: scale(0);
 }
 #back-button svg {
-    opacity: 0.45;
+	display: block;
+	opacity: 0.45;
 }
 
 
