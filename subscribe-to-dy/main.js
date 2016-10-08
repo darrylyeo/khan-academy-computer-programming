@@ -195,14 +195,15 @@ var coverDY = function(){
 
 
 
-createCanvas(windowWidth, windowHeight, P2D);
+//createCanvas(windowWidth, windowHeight, P2D);
+createCanvas(document.documentElement.clientWidth, document.documentElement.clientHeight, P2D);
 //document.getElementById("cover").appendChild(document.getElementById("defaultCanvas0"));
 document.body.insertBefore(document.getElementById("defaultCanvas0"), document.body.childNodes[0]);
 
 var VMIN = min(width, height);
 var VMAX = max(width, height);
 
-P5.windowResized = function(){,
+P5.windowResized = function(){
 	//resizeCanvas(windowWidth, windowHeight);
 	resizeCanvas(document.documentElement.clientWidth, document.documentElement.clientHeight);
 	VMIN = min(width, height);
