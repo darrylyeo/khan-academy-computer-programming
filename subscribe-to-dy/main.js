@@ -202,8 +202,9 @@ document.body.insertBefore(document.getElementById("defaultCanvas0"), document.b
 var VMIN = min(width, height);
 var VMAX = max(width, height);
 
-P5.windowResized = function(){
-	resizeCanvas(windowWidth, windowHeight);
+P5.windowResized = function(){,
+	//resizeCanvas(windowWidth, windowHeight);
+	resizeCanvas(document.documentElement.clientWidth, document.documentElement.clientHeight);
 	VMIN = min(width, height);
 	VMAX = max(width, height);
 };
