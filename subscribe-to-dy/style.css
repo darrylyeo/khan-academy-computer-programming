@@ -142,6 +142,7 @@ body.scrolled #defaultCanvas0 {
 }
 
 .scroll-down {
+	font-size: 20rem;
 	height: 0;
 	margin: 0;
 	position: relative;
@@ -276,6 +277,7 @@ article.active h1 {
 	transition: 0.5s;
 	
 	height: 180%;
+	height: calc(100vh - 56rem);
 	width: 200%;
 	-webkit-transform: scale(0.5);
 	-ms-transform: scale(0.5);
