@@ -622,7 +622,7 @@ function markdown(t) {
 	var italicCheck = /\_([\S\ ]+)\_/gi;
 	var inlineCodeCheck = /`([\S\ ]+)`/gi;
 	var blockCodeCheck = /```([\S\ ]+)```/gi;
-	var urlCheck = /(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/gi;
+	var urlCheck = /((https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?)/gi;
 	var newlineCheck = /[\r\n|\n]+/g;
 	// ==================================================
 
@@ -637,7 +637,7 @@ function markdown(t) {
 		"<pre>$1</pre>");
 	t = t.replace(inlineCodeCheck,
 		"<code>$1</code>");
-	t = t.replace(urlCheck, "<a href=\"$2.$3\">$2.$3$4</a>");
+	t = t.replace(urlCheck, "<a href=\"$1\">$1</a>");
 	t = t.replace(newlineCheck, "<br>");
 	// ==================================================
 
