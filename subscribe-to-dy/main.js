@@ -242,9 +242,9 @@ P5.draw = function(){
 			scale(VMAX/400);
 			noStroke();
 			strokeWeight(4);
-			for(var i = 0; i < 180; i++){
+			for(var i = 0; i < 180; i += 2){
 				rotate(-199 * i + t / 100);
-				fill((t / 100 * i /360) % 1 * 360, 255, 255, 6/255);
+				fill((t / 100 * i /360) % 1 * 360, 255, 255, 10/255);
 				triangle(1, 0, 400, 30, 400, -30);
 				rotate(200 * i);
 			}
