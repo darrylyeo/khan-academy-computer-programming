@@ -240,11 +240,11 @@ P5.draw = function(){
 
 		push();
 			scale(VMAX/400);
+			noStroke();
+			strokeWeight(4);
 			for(var i = 0; i < 180; i++){
 				rotate(-199 * i + t / 100);
 				fill((t / 100 * i /360) % 1 * 360, 255, 255, 6/255);
-				noStroke();
-				strokeWeight(4);
 				triangle(1, 0, 400, 30, 400, -30);
 				rotate(200 * i);
 			}
@@ -253,14 +253,14 @@ P5.draw = function(){
 	
 	//filter(BLUR);
 	
-	loadPixels();
+	/*loadPixels();
 	var d = pixelDensity();
 	var pixelCount = 4 * (width * d) * (height * d);
 	for (var i = 0; i < pixelCount; i+=4) {
 		pixels[i+3] *= 0.99;
 		//pixels[i+3] -= 0.01;
 	}
-	updatePixels();
+	updatePixels();*/
 
 	t++;
 };
