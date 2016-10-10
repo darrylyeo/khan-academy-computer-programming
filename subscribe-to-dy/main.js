@@ -640,7 +640,7 @@ function markdown(t) {
 		"<pre>$1</pre>");
 	t = t.replace(inlineCodeCheck,
 		"<code>$1</code>");
-	t = t.replace(urlCheck, "<a href=\"$1\" target="_blank">$1</a>");
+	t = t.replace(urlCheck, '<a href="$1" target="_blank">$1</a>');
 	t = t.replace(newlineCheck, "<br>");
 	// ==================================================
 
