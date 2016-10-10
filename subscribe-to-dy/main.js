@@ -8,14 +8,14 @@
 new p5(function(P5){with(P5){P5.setup = function(){
 
 var mergeObjects = function(obj1, obj2){
-    for(var p in obj2){
-        obj1[p] = obj2[p];
-    }
-    return obj1;
+	for(var p in obj2){
+		obj1[p] = obj2[p];
+	}
+	return obj1;
 };
 
 Array.prototype.random = function() {
-    return this[Math.floor(Math.random() * this.length)];
+	return this[Math.floor(Math.random() * this.length)];
 };
 
 var inRect = function(pos, x, y, w, h){
@@ -81,18 +81,18 @@ Particle.prototype.draw = function(){
 Particle.prototype.update = function(){
 	for(var p in this.speed){
 		if(typeof this.speed[p] === "object"){
-    	    this[p].add(this.speed[p]);
+			this[p].add(this.speed[p]);
 		}else{
-    	    this[p] += this.speed[p];
+			this[p] += this.speed[p];
 		}
-    }
+	}
 	for(var p in this.acceleration){
 		if(typeof this.acceleration[p] === "object"){
-    	    this.speed[p].add(this.acceleration[p]);
+			this.speed[p].add(this.acceleration[p]);
 		}else{
-    	    this.speed[p] += this.acceleration[p];
+			this.speed[p] += this.acceleration[p];
 		}
-    }
+	}
 	if(!inRect(this.pos, -width/2 - this.scale, -height/2 - this.scale, width + this.scale*2, height + this.scale*2)){
 		this.isDead = true;
 	}
@@ -140,7 +140,7 @@ Particle.particles.update = function(){
 			this[i].update();
 		}
 	}
-	if(random() < 0.1 && this.length < 100){
+	if(random() < 0.2 && this.length < 100){
 		new Particle();
 	}
 	this.sort(function(a, b){
@@ -149,7 +149,7 @@ Particle.particles.update = function(){
 };
 
 var DY = function(x, y, s, r){
-    push();
+	push();
 		colorMode(RGB);
 		translate(x, y);
 		scale(s / 400);
@@ -185,7 +185,7 @@ var DY = function(x, y, s, r){
 			line(16-2, -12.5, 16 / 2-2, 2);
 			line(16 / 2-2, 12.5, 16 / 2-2, 2);
 		pop();
-    pop();
+	pop();
 };
 var coverDY = function(){
 	DY(0, sin(frameCount) * 2, VMIN*0.55 + sin(frameCount * 3) * 12, sin(frameCount * 8) * 2);
@@ -242,9 +242,10 @@ P5.draw = function(){
 			scale(VMAX/400);
 			noStroke();
 			strokeWeight(4);
-			for(var i = 0; i < 180; i += 2){
+			for(var i = 0; i < 180; i++/*i += 2*/){
 				rotate(-199 * i + t / 100);
-				fill((t / 100 * i /360) % 1 * 360, 255, 255, 10/255);
+				//fill((t / 100 * i /360) % 1 * 360, 255, 255, 10/255);
+				fill((t / 100 * i /360) % 1 * 360, 255, 255, 6/255);
 				triangle(1, 0, 400, 30, 400, -30);
 				rotate(200 * i);
 			}
@@ -272,15 +273,15 @@ P5.draw = function(){
 
 function scroll(){
 	if(document.body.scrollTop > 50){
-	    if(!document.body.classList.contains("scrolled")){
-    		document.body.classList.add("scrolled");
-    		noLoop();
-	    }
+		if(!document.body.classList.contains("scrolled")){
+			document.body.classList.add("scrolled");
+			noLoop();
+		}
 	}else{
-	    if(document.body.classList.contains("scrolled")){
-    		document.body.classList.remove("scrolled");
-    		loop();
-	    }
+		if(document.body.classList.contains("scrolled")){
+			document.body.classList.remove("scrolled");
+			loop();
+		}
 	}
 }
 scroll();
@@ -300,10 +301,10 @@ $("article").click(function(){
 	});
 })
 $(document).click(function(event) { 
-    if(!$(event.target).closest('article').length &&
-       !$(event.target).is('article')) {
-        $("article.active").removeClass("active");
-    }
+	if(!$(event.target).closest('article').length &&
+	   !$(event.target).is('article')) {
+		$("article.active").removeClass("active");
+	}
 	
 	updateUI();
 })
@@ -318,220 +319,220 @@ function updateUI(){
 
 
 function getAbout(){
-    var username = 'darrylyeo';
-    
-    function getBadge(handle){
-    	return handle ? 'https://cdn.kastatic.org/images/badges/' + handle + (handle.includes('/') ? '-512x512.png' : '.png') : '';
-    }
-    
-    var tieredBadges = {
-    	membership: {
-    		365: 'meteorite/cypress',
-    		730: 'moon/redwood',
-    		1095: 'earth/sequoia',
-    		//[365 * 4]: 'earth/bristlecone',
-    	},
-    	energyPoints: {
-    		1e4: 'meteorite/ten-to-fourth',
-    		1e5: 'moon/ten-to-fifth',
-    		5e5: 'earth/5x10',
-    		1e6: 'sun/millionaire',
-    		1e7: 'eclipse',
-    	},
-    	streak: {
-    		5: 'meteorite/good-habits',
-    		15: 'moon/like-clockwork',
-    		30: 'moon/atomic-clockwork',
-    		100: 'earth/10000-year-clock',
-    	},
-    	inspiration: {
-    		1: 'meteorite/inspiration',
-    		10: 'moon/good-inspiration',
-    		25: 'earth/great-inspiration',
-    		50: 'earth/incredible-inspiration',
-    	},
-    	reviews: {
-    		1: 'meteorite', // Evaluator
-    		30: 'moon', // Astute Analyzer
-    		150: 'earth', // Rave Reviewer
-    	},
-    	questions: {
-    		10: 'earth/investigator',
-    		100: 'sun/detective',
-    	},
-    	topQuestion: {
-    		10: 'moon/good-question',
-    		25: 'earth/great-question',
-    		50: 'earth/incredible-question',
-    	},
-    	answers: {
-    		5: 'moon/excellent-teacher',
-    		10: 'earth/guru',
-    		25: 'earth/incredible-teacher',
-    		50: 'earth/sensei',
-    		100: 'sun/oracle',
-    	},
-    	topAnswer: {
-    		10: 'moon/good-answer',
-    		25: 'earth/great-answer',
-    		50: 'earth/incredible-answer',
-    	},
-    	video: {
-    		15: 'meteorite/great-listener', // Nice Listener
-    		30: 'meteorite/great-listener',
-    		60: 'moon/awesome-listener',
-    		240: 'earth/ridiculous-listener',
-    		600: 'sun/ludicrous-listener',
-    	}
-    }
-    
-    function getTieredBadge(category, value){
-    	var badges = tieredBadges[category];
-    	return getBadge(badges[
-    		Object.keys(badges)
-    			.filter(function(n){return value >= n})
-    			.sort(function(a, b){return b - a})[0]
-    	]);
-    }
-    
-    function daysDifference(d0, d1) {
-    	var diff = new Date(d1).setHours(12) - new Date(d0).setHours(12);
-    	return Math.round(diff/8.64e7);
-    }
-    
-    $.fn.fadeOutRemove = function(speed){
-        $(this).fadeOut(speed,function(){
-            $(this).remove();
-        })
-    }
-    
-    function $makeStat(number, text, img, size, id){
-    	var $stat = $('<div>').addClass('stat').append(
-    		$('<span>').addClass('stat-number').text(number.toLocaleString()),
-    		$('<span>').addClass('stat-label').text(text)
-    	).appendTo('#stats')//.attr('id', id)
-    	if(img) $stat.addClass('has-img').css('background-image', 'url(' + img + ')')
-    	if(size) $stat.attr('data-size', 2);
-    	return $stat;
-    }
-    
-    $.getJSON("https://www.khanacademy.org/api/internal/user/profile?username=" + username + "&lang=en&callback=?", function(data){
-    	$("#profile").removeClass(".loading")
-    	
-    	var d = new Date(data.dateJoined);
-    	var date = ("0"+(d.getMonth()+1)).slice(-2) + "/" + ("0" + d.getDate()).slice(-2) + "/" + d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
-    	
-    	$("#profile .avatar").attr('src', data.avatarSrc);
-    	$("#profile .nickname").text(data.nickname),
-    	$("#profile .username").text("@" + data.username);
-    	$("#profile .joined").text("Joined " + date)
-    	$("#profile .bio").html(markdown(data.bio));
-    	$('#profile').hide().fadeIn(1000)
-    	
-    	var days = daysDifference(d, Date.now());
-    	$('#membership').replaceWith($makeStat(days, 'Days of Membership', getTieredBadge('membership', days)));
-    	$('#points').replaceWith($makeStat(data.points, 'Energy Points Earned', getTieredBadge('energyPoints', data.points), 2));
-    	$('#videos').replaceWith($makeStat(data.countVideosCompleted, 'Videos Watched', getTieredBadge('video', data.countVideosCompleted)))
-    	
-    	$.getJSON('https://www.khanacademy.org/api/internal/user/' + data.kaid + '/profile/widgets?callback=?', function(widgets){
-    		$("#streak").removeClass(".loading")
-    		var streakWidget = widgets.find(function(widget){return widget.widgetId === "StreakWidget"});
-    		if(streakWidget){
-    			var streakData = streakWidget.renderData.streakWidgetData.streakData;
-    
-    			var longestStreak = streakData.history.map(function(streak){
-    				return daysDifference(streak[0], streak[1])
-    			}).sort(function(a, b){
-    				return b - a;
-    			})[0];
-    
-    			$("#streak").before([
-    				$makeStat(longestStreak, 'Longest Streak', getTieredBadge('streak', longestStreak)),
-    				$makeStat(streakData.days, 'Current Streak', getTieredBadge('streak', streakData.days))
-    			]);
-    		}
-    		$("#streak").remove();
-    		
-    		var badgeWidget = widgets.find(function(widget){return widget.widgetId === "BadgeCountWidget"});
-    		$("#badges").removeClass(".loading")
-    		if(badgeWidget){
-    			var badgeCounts = badgeWidget.renderData.badgeCountData.counts;
-    			var $badges = $("#badges");
-    			badgeCounts.forEach(function(badgeCount){
-    				$badges.before(
-    					$makeStat(badgeCount.count, badgeCount.typeLabel + ' Awarded', badgeCount.compactIconSrc.replace('-small', ''))
-    				)
-    			});
-    		}
-    		$("#badges").remove();
-    
-    		var discussionWidget = widgets.find(function(widget){widget.widgetId === "DiscussionWidget"});
-    		$("#discussion").removeClass(".loading")
-    		if(discussionWidget){
-    			var discussionData = discussionWidget.renderData.discussionData;
-    			var discussionStats = discussionData.statistics;
-    			
-    			var topQuestion = discussionData.questions[0];
-    			var topAnswer = discussionData.questions[0];
-    			
-    			$("#discussion").before([
-    				$makeStat(discussionStats.questions, 'Questions Asked', getTieredBadge('questions', discussionStats.questions)),
-    				$makeStat(discussionStats.answers, 'Questions Answered', getTieredBadge('answers', discussionStats.answers)),
-    				$makeStat(discussionStats.projectquestions, 'Help Requests Posted', getTieredBadge('reviews', discussionStats.projectquestions)),
-    				$makeStat(discussionStats.projectanswers, 'Help Requests Resolved', getTieredBadge('reviews', discussionStats.projectanswers)),
-    				$makeStat(discussionStats.comments, 'Tips and Thanks Given', getBadge('meteorite/collaborator')),
-    				$makeStat(discussionStats.replies, 'Comments Posted', getBadge('meteorite/bibliographer')),
-    				topQuestion ? $makeStat(topQuestion.sumVotesIncremented, 'Votes on Top Question', topQuestion.badges[0] && topQuestion.badges[0].icons.large) : '',
-    				topAnswer ? $makeStat(topAnswer.sumVotesIncremented, 'Votes on Top Answer', topAnswer.badges[0] && topAnswer.badges[0].icons.large) : '',
-    				$makeStat(discussionStats.votes, 'Votes Cast', getBadge('meteorite/thumbs-up')),
-    				$makeStat(discussionStats.flags, 'Flags Raised', getBadge('meteorite/flag-duty'))
-    			]);
-    		}
-    		$("#discussion").remove();
-    	});
-    })
-    
-    $.getJSON("https://www.khanacademy.org/api/internal/user/scratchpads?username=" + username + "&sort=1&limit=1000&page=0&lang=en&callback=?", function(data) {
-    	$("#projects").removeClass(".loading")
-    
-    	var totalVotes = 0;
-    	var voteCounts = [];
-    	var totalSpinoffs = 0;
-    	var spinoffCounts = [];
-    
-    	var scratchpads = data.scratchpads;
-    	$("#projects h2")[0].innerHTML = scratchpads.length + " Projects Created"
-    	scratchpads.forEach(function(scratchpad) {
-    		scratchpad.sumVotesIncremented && scratchpad.sumVotesIncremented--;
-    		totalVotes += scratchpad.sumVotesIncremented;
-    		voteCounts.push(scratchpad.sumVotesIncremented);
-    		
-    		scratchpad.spinoffCount = Math.max(0, scratchpad.spinoffCount);
-    		totalSpinoffs += scratchpad.spinoffCount;
-    		spinoffCounts.push(scratchpad.spinoffCount);
-    
-    		$('<div>')
-    			.append(
-    				$('<a>').attr('href', scratchpad.url)
-    				.append(
-    					$('<img>').attr('src', 'https://www.khanacademy.org' + scratchpad.thumb)
-    				),
-    				$('<div>')
-    				.append(
-    					$('<h3>').text(scratchpad.title),
-    						$('<p>').append(	$('<span>').text(scratchpad.sumVotesIncremented + ' Votes'),
-    						' | ',
-    						$('<span>').text(scratchpad.spinoffCount + ' Spinoffs')
-    						)
-    				)
-    			)
-    			//.hide().fadeTo(1000, 1)
-    			.appendTo('#projects-wrapper')
-    	})
-    
-    	$makeStat(totalVotes, "Project Votes Earned", getBadge('cs/drawing_animation_mastery_badge'))
-    	$makeStat(totalSpinoffs, "Spinoffs Made By Community Members", getTieredBadge('inspiration', totalSpinoffs))
-    });
+	var username = 'darrylyeo';
+	
+	function getBadge(handle){
+		return handle ? 'https://cdn.kastatic.org/images/badges/' + handle + (handle.includes('/') ? '-512x512.png' : '.png') : '';
+	}
+	
+	var tieredBadges = {
+		membership: {
+			365: 'meteorite/cypress',
+			730: 'moon/redwood',
+			1095: 'earth/sequoia',
+			//[365 * 4]: 'earth/bristlecone',
+		},
+		energyPoints: {
+			1e4: 'meteorite/ten-to-fourth',
+			1e5: 'moon/ten-to-fifth',
+			5e5: 'earth/5x10',
+			1e6: 'sun/millionaire',
+			1e7: 'eclipse',
+		},
+		streak: {
+			5: 'meteorite/good-habits',
+			15: 'moon/like-clockwork',
+			30: 'moon/atomic-clockwork',
+			100: 'earth/10000-year-clock',
+		},
+		inspiration: {
+			1: 'meteorite/inspiration',
+			10: 'moon/good-inspiration',
+			25: 'earth/great-inspiration',
+			50: 'earth/incredible-inspiration',
+		},
+		reviews: {
+			1: 'meteorite', // Evaluator
+			30: 'moon', // Astute Analyzer
+			150: 'earth', // Rave Reviewer
+		},
+		questions: {
+			10: 'earth/investigator',
+			100: 'sun/detective',
+		},
+		topQuestion: {
+			10: 'moon/good-question',
+			25: 'earth/great-question',
+			50: 'earth/incredible-question',
+		},
+		answers: {
+			5: 'moon/excellent-teacher',
+			10: 'earth/guru',
+			25: 'earth/incredible-teacher',
+			50: 'earth/sensei',
+			100: 'sun/oracle',
+		},
+		topAnswer: {
+			10: 'moon/good-answer',
+			25: 'earth/great-answer',
+			50: 'earth/incredible-answer',
+		},
+		video: {
+			15: 'meteorite/great-listener', // Nice Listener
+			30: 'meteorite/great-listener',
+			60: 'moon/awesome-listener',
+			240: 'earth/ridiculous-listener',
+			600: 'sun/ludicrous-listener',
+		}
+	}
+	
+	function getTieredBadge(category, value){
+		var badges = tieredBadges[category];
+		return getBadge(badges[
+			Object.keys(badges)
+				.filter(function(n){return value >= n})
+				.sort(function(a, b){return b - a})[0]
+		]);
+	}
+	
+	function daysDifference(d0, d1) {
+		var diff = new Date(d1).setHours(12) - new Date(d0).setHours(12);
+		return Math.round(diff/8.64e7);
+	}
+	
+	$.fn.fadeOutRemove = function(speed){
+		$(this).fadeOut(speed,function(){
+			$(this).remove();
+		})
+	}
+	
+	function $makeStat(number, text, img, size, id){
+		var $stat = $('<div>').addClass('stat').append(
+			$('<span>').addClass('stat-number').text(number.toLocaleString()),
+			$('<span>').addClass('stat-label').text(text)
+		).appendTo('#stats')//.attr('id', id)
+		if(img) $stat.addClass('has-img').css('background-image', 'url(' + img + ')')
+		if(size) $stat.attr('data-size', 2);
+		return $stat;
+	}
+	
+	$.getJSON("https://www.khanacademy.org/api/internal/user/profile?username=" + username + "&lang=en&callback=?", function(data){
+		$("#profile").removeClass(".loading")
+		
+		var d = new Date(data.dateJoined);
+		var date = ("0"+(d.getMonth()+1)).slice(-2) + "/" + ("0" + d.getDate()).slice(-2) + "/" + d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
+		
+		$("#profile .avatar").attr('src', data.avatarSrc);
+		$("#profile .nickname").text(data.nickname),
+		$("#profile .username").text("@" + data.username);
+		$("#profile .joined").text("Joined " + date)
+		$("#profile .bio").html(markdown(data.bio));
+		$('#profile').hide().fadeIn(1000)
+		
+		var days = daysDifference(d, Date.now());
+		$('#membership').replaceWith($makeStat(days, 'Days of Membership', getTieredBadge('membership', days)));
+		$('#points').replaceWith($makeStat(data.points, 'Energy Points Earned', getTieredBadge('energyPoints', data.points), 2));
+		$('#videos').replaceWith($makeStat(data.countVideosCompleted, 'Videos Watched', getTieredBadge('video', data.countVideosCompleted)))
+		
+		$.getJSON('https://www.khanacademy.org/api/internal/user/' + data.kaid + '/profile/widgets?callback=?', function(widgets){
+			$("#streak").removeClass(".loading")
+			var streakWidget = widgets.find(function(widget){return widget.widgetId === "StreakWidget"});
+			if(streakWidget){
+				var streakData = streakWidget.renderData.streakWidgetData.streakData;
+	
+				var longestStreak = streakData.history.map(function(streak){
+					return daysDifference(streak[0], streak[1])
+				}).sort(function(a, b){
+					return b - a;
+				})[0];
+	
+				$("#streak").before([
+					$makeStat(longestStreak, 'Longest Streak', getTieredBadge('streak', longestStreak)),
+					$makeStat(streakData.days, 'Current Streak', getTieredBadge('streak', streakData.days))
+				]);
+			}
+			$("#streak").remove();
+			
+			var badgeWidget = widgets.find(function(widget){return widget.widgetId === "BadgeCountWidget"});
+			$("#badges").removeClass(".loading")
+			if(badgeWidget){
+				var badgeCounts = badgeWidget.renderData.badgeCountData.counts;
+				var $badges = $("#badges");
+				badgeCounts.forEach(function(badgeCount){
+					$badges.before(
+						$makeStat(badgeCount.count, badgeCount.typeLabel + ' Awarded', badgeCount.compactIconSrc.replace('-small', ''))
+					)
+				});
+			}
+			$("#badges").remove();
+	
+			var discussionWidget = widgets.find(function(widget){widget.widgetId === "DiscussionWidget"});
+			$("#discussion").removeClass(".loading")
+			if(discussionWidget){
+				var discussionData = discussionWidget.renderData.discussionData;
+				var discussionStats = discussionData.statistics;
+				
+				var topQuestion = discussionData.questions[0];
+				var topAnswer = discussionData.questions[0];
+				
+				$("#discussion").before([
+					$makeStat(discussionStats.questions, 'Questions Asked', getTieredBadge('questions', discussionStats.questions)),
+					$makeStat(discussionStats.answers, 'Questions Answered', getTieredBadge('answers', discussionStats.answers)),
+					$makeStat(discussionStats.projectquestions, 'Help Requests Posted', getTieredBadge('reviews', discussionStats.projectquestions)),
+					$makeStat(discussionStats.projectanswers, 'Help Requests Resolved', getTieredBadge('reviews', discussionStats.projectanswers)),
+					$makeStat(discussionStats.comments, 'Tips and Thanks Given', getBadge('meteorite/collaborator')),
+					$makeStat(discussionStats.replies, 'Comments Posted', getBadge('meteorite/bibliographer')),
+					topQuestion ? $makeStat(topQuestion.sumVotesIncremented, 'Votes on Top Question', topQuestion.badges[0] && topQuestion.badges[0].icons.large) : '',
+					topAnswer ? $makeStat(topAnswer.sumVotesIncremented, 'Votes on Top Answer', topAnswer.badges[0] && topAnswer.badges[0].icons.large) : '',
+					$makeStat(discussionStats.votes, 'Votes Cast', getBadge('meteorite/thumbs-up')),
+					$makeStat(discussionStats.flags, 'Flags Raised', getBadge('meteorite/flag-duty'))
+				]);
+			}
+			$("#discussion").remove();
+		});
+	})
+	
+	$.getJSON("https://www.khanacademy.org/api/internal/user/scratchpads?username=" + username + "&sort=1&limit=1000&page=0&lang=en&callback=?", function(data) {
+		$("#projects").removeClass(".loading")
+	
+		var totalVotes = 0;
+		var voteCounts = [];
+		var totalSpinoffs = 0;
+		var spinoffCounts = [];
+	
+		var scratchpads = data.scratchpads;
+		$("#projects h2")[0].innerHTML = scratchpads.length + " Projects Created"
+		scratchpads.forEach(function(scratchpad) {
+			scratchpad.sumVotesIncremented && scratchpad.sumVotesIncremented--;
+			totalVotes += scratchpad.sumVotesIncremented;
+			voteCounts.push(scratchpad.sumVotesIncremented);
+			
+			scratchpad.spinoffCount = Math.max(0, scratchpad.spinoffCount);
+			totalSpinoffs += scratchpad.spinoffCount;
+			spinoffCounts.push(scratchpad.spinoffCount);
+	
+			$('<div>')
+				.append(
+					$('<a>').attr('href', scratchpad.url)
+					.append(
+						$('<img>').attr('src', 'https://www.khanacademy.org' + scratchpad.thumb)
+					),
+					$('<div>')
+					.append(
+						$('<h3>').text(scratchpad.title),
+							$('<p>').append(	$('<span>').text(scratchpad.sumVotesIncremented + ' Votes'),
+							' | ',
+							$('<span>').text(scratchpad.spinoffCount + ' Spinoffs')
+							)
+					)
+				)
+				//.hide().fadeTo(1000, 1)
+				.appendTo('#projects-wrapper')
+		})
+	
+		$makeStat(totalVotes, "Project Votes Earned", getBadge('cs/drawing_animation_mastery_badge'))
+		$makeStat(totalSpinoffs, "Spinoffs Made By Community Members", getTieredBadge('inspiration', totalSpinoffs))
+	});
 }
 getAbout();
 
@@ -639,7 +640,7 @@ function markdown(t) {
 		"<pre>$1</pre>");
 	t = t.replace(inlineCodeCheck,
 		"<code>$1</code>");
-	t = t.replace(urlCheck, "<a href=\"$1\">$1</a>");
+	t = t.replace(urlCheck, "<a href=\"$1\" target="_blank">$1</a>");
 	t = t.replace(newlineCheck, "<br>");
 	// ==================================================
 
